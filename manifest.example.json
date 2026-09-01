@@ -1,0 +1,53 @@
+{
+  "schema_version": "lark-test-ledger/v1",
+  "product": "Project A",
+  "version": "v1.0",
+  "meegle_feature": "用户登录",
+  "build": "uat-20260824",
+  "default_environment": "UAT",
+  "source_documents": [
+    {
+      "name": "login-requirements.md",
+      "path": "D:/Projects/ProjectA/requirements/login-requirements.md",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "requirements": [
+    {
+      "requirement_id": "REQ-LOGIN-001",
+      "module": "登录",
+      "title": "有效账号登录",
+      "acceptance_criteria": [
+        "有效账号可以登录",
+        "登录后进入工作台"
+      ],
+      "source_locator": "login-requirements.md#有效账号登录",
+      "needs_clarification": false
+    }
+  ],
+  "test_cases": [
+    {
+      "case_id": "PROJECTA-LOGIN-TC-001",
+      "requirement_ids": ["REQ-LOGIN-001"],
+      "module": "登录",
+      "title": "使用有效账号登录",
+      "preconditions": ["测试账号已创建"],
+      "steps": [
+        {
+          "action": "输入有效用户名和密码并提交",
+          "expected": "登录成功并进入工作台"
+        }
+      ],
+      "priority": "P0",
+      "smoke_order": 1,
+      "developer_open_ids": [],
+      "tester_open_ids": []
+    }
+  ],
+  "generation": {
+    "batch_id": "projecta-login-20260824-001",
+    "generator": "Codex",
+    "generated_at": "2026-08-24T12:00:00+10:00",
+    "rules_version": "projecta-test-v1"
+  }
+}

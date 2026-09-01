@@ -1,0 +1,27 @@
+# Lark test ledger workflow
+
+- Before generating or executing tests, read the project's requirement baseline.
+- The canonical test ledger is `${LARK_BASE_URL}` and its configuration file is
+  `.lark-test-ledger/ledger.env`. Do not silently create or switch to another Base.
+- Generated full cases and submission cases use the same table. A non-empty
+  `提测顺序` marks a submission case and defines its execution order.
+- Generate `lark-test-ledger/v1` manifests, validate them, dry-run synchronization,
+  and require explicit approval before committing generated definitions.
+- Locate records by globally unique `用例ID`. Execution may update only `Date`,
+  `Attachment`, `测试结果`, and `实际结果/备注`; preserve generated definitions.
+- For browser-visible failures, capture evidence that shows the error or incorrect
+  state. Append it to the same record. Preserve existing attachments. If evidence
+  cannot be captured, record the reason in `实际结果/备注`.
+- After every result or attachment write, reread the record and verify the change.
+
+## Commands
+
+Use `.lark-test-ledger/lark-ledger.ps1` from the project root:
+
+```powershell
+./.lark-test-ledger/lark-ledger.ps1 status
+./.lark-test-ledger/lark-ledger.ps1 case list --submission-only
+./.lark-test-ledger/lark-ledger.ps1 execution next
+./.lark-test-ledger/lark-ledger.ps1 execution record --case-id TC-001 --result passed --notes "符合预期"
+./.lark-test-ledger/lark-ledger.ps1 execution record --case-id TC-002 --result failed --notes "保存时报错" --evidence ./evidence/TC-002.png
+```

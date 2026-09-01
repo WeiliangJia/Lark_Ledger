@@ -1,0 +1,7 @@
+interface:
+  display_name: "Lark 测试账本"
+  short_description: "连接 Lark 多维表格，生成、同步、读取并执行项目测试用例"
+  brand_color: "#3370FF"
+  default_prompt: "Use $lark-test-ledger to configure or operate the current project's Lark test-case ledger."
+policy:
+  allow_implicit_invocation: true
