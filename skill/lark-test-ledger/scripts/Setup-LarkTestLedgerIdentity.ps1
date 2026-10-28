@@ -24,7 +24,7 @@ if ($ReuseIdentityEnv) {
             $secureSecret = Read-Host '请输入公司自建 Lark App Secret（输入会隐藏）' -AsSecureString
             $AppSecret = [Net.NetworkCredential]::new('', $secureSecret).Password
         }
-        if (-not $AppId.Trim() -or -not $AppSecret) { throw 'App ID and App Secret must not be empty' }
+        if (-not $AppId.Trim() -or -not $AppSecret) { throw 'App ID 和 App Secret 不能为空。请向公司应用管理员获取，并仅在本机填写。' }
         $identityDir = Split-Path -Parent $resolvedIdentity
         New-Item -ItemType Directory -Force -Path $identityDir | Out-Null
         $identityLines = @(
@@ -55,12 +55,12 @@ if (-not $SkipAuth) {
     $pythonCommand = Get-Command python -ErrorAction Stop
     $env:PYTHONUTF8 = '1'
     $statusText = & $pythonCommand.Source $runtime --env-file $resolvedIdentity status | Out-String
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to read Lark identity status' }
+    if ($LASTEXITCODE -ne 0) { throw '无法读取身份状态。请检查身份配置文件。' }
     $status = $statusText | ConvertFrom-Json
     if (-not $status.authorized) {
         Write-Host '即将打开 Lark 授权页面。请本人完成登录、MFA 和授权。' -ForegroundColor Cyan
         & $pythonCommand.Source $runtime --env-file $resolvedIdentity auth
-        if ($LASTEXITCODE -ne 0) { throw 'Lark authorization failed' }
+        if ($LASTEXITCODE -ne 0) { throw 'Lark 授权未完成。请重新运行 auth，在浏览器完成登录并检查回调地址。' }
     }
 }
 

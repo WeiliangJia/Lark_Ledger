@@ -3,6 +3,28 @@
 本页面向第一次使用Lark Test Ledger的测试人员。完整管理员配置、安全和排错说明见
 [COMPANY_SETUP_GUIDE.md](COMPANY_SETUP_GUIDE.md)。
 
+## 推荐：统一初始化入口
+
+在 Windows 的 PowerShell 7 中，从仓库根目录运行：
+
+```powershell
+./Start-LarkTestLedger.ps1 -ProjectRoot 'D:\Projects\ProjectA'
+```
+
+向导检查 Python 3.11+，选择 Codex / Claude Code / Qoder，安装 Skill，复用或创建本机身份，
+引导浏览器 OAuth，最后只读检查 Base 和字段。不会自动创建 Base 或修改字段。
+缺少依赖时给出安装建议，不会自动安装系统软件。项目目录须已存在。
+
+- `-CheckOnly`：只检查本机环境，不写配置、不授权。
+- `-Client Codex|ClaudeCode|Qoder`：直接选择客户端。
+- `-IdentityEnv <路径>`：引用已有身份。
+- 重复运行保留已安装 Skill 和项目配置，不自动升级或切换 Base。
+- 客户端加载受其版本和权限设置影响；Qoder 图形界面可从 Extensions → Skills 导入整个 Skill 文件夹。
+- 当前提供标准目录适配，尚未完成 Claude Code / Qoder 图形界面端到端验证。
+- `doctor` 非零退出码表示未就绪；字段异常先运行 `schema plan` 查看差异。
+
+以下保留手工配置流程。
+
 ## 1. 准备环境
 
 需要：

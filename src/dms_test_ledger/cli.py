@@ -16,10 +16,16 @@ from .manifest import file_sha256, load_manifest, verify_source_documents
 from .schema import FIELDS, SchemaManager
 from .state import StateStore
 from .sync import SyncEngine
+from .user_errors import explain_error
+
+
+class LedgerArgumentParser(argparse.ArgumentParser):
+    def error(self, message: str) -> None:
+        super().error(f"命令参数不完整或无效：{message}。请使用 --help 查看参数说明。")
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
+    parser = LedgerArgumentParser(
         prog="lark-test-ledger",
         description="Validate Codex-generated test cases and synchronize one Lark Base test ledger",
     )
@@ -291,12 +297,15 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 0
         if args.command == "doctor":
-            _print(run_doctor(state=state, lark=lark, schema=schema))
-            return 0
+            result = run_doctor(state=state, lark=lark, schema=schema)
+            _print(result)
+            if not result["ready"]:
+                print("Base 可访问，但字段不完整或类型冲突。请运行 schema plan 查看差异，核实目标后再决定是否执行 schema apply。", file=sys.stderr)
+            return 0 if result["ready"] else 1
         parser.error("unknown command")
         return 2
     except (LedgerError, OSError, ValueError) as exc:
-        print(str(exc), file=sys.stderr)
+        print(explain_error(exc), file=sys.stderr)
         return 1
 
 
