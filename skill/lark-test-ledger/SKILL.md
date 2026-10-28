@@ -1,6 +1,6 @@
 ---
 name: lark-test-ledger
-description: Configure and operate a Lark Base test-case ledger for Codex projects, including generating and syncing cases, reading submission cases, recording execution results, and appending failure evidence. Use when the user mentions Lark test cases, test ledgers, submission testing, or asks to set up this workflow in a project.
+description: Configure and operate a Lark Base test-case ledger, including generating and syncing cases, reading submission cases, recording execution results, and appending failure evidence. Use when the user mentions Lark test cases, test ledgers, submission testing, or asks to set up this workflow in a project.
 metadata:
   short-description: Operate Lark-backed test-case workflows
 ---

@@ -1,24 +1,31 @@
+#Requires -Version 7.0
 [CmdletBinding()]
 param(
     [string]$SourceSkill = (Join-Path $PSScriptRoot 'skill\lark-test-ledger'),
     [string]$IdentityEnv,
-    [switch]$SkipCompatibilityLink
+    [switch]$SkipCompatibilityLink,
+    [ValidateSet('Codex', 'ClaudeCode', 'Qoder')]
+    [string]$Client = 'Codex'
 )
 
 $ErrorActionPreference = 'Stop'
 $source = (Resolve-Path -LiteralPath $SourceSkill).Path
 $userProfile = [Environment]::GetFolderPath('UserProfile')
 $codexRoot = if ($env:CODEX_HOME) { [IO.Path]::GetFullPath($env:CODEX_HOME) } else { Join-Path $userProfile '.codex' }
-$skillsRoot = Join-Path $codexRoot 'skills'
+$skillsRoot = switch ($Client) {
+    'Codex' { Join-Path $codexRoot 'skills' }
+    'ClaudeCode' { Join-Path $userProfile '.claude\skills' }
+    'Qoder' { Join-Path $userProfile '.qoder\skills' }
+}
 $target = Join-Path $skillsRoot 'lark-test-ledger'
 if (Test-Path -LiteralPath $target) {
-    throw "Skill already exists; remove or update it explicitly: $target"
+    throw "Skill 已存在：$target。请先备份并显式更新，安装器不会覆盖已有文件。"
 }
 New-Item -ItemType Directory -Force -Path $skillsRoot | Out-Null
 Copy-Item -LiteralPath $source -Destination $target -Recurse
 
 $compatibility = $null
-if (-not $SkipCompatibilityLink) {
+if ($Client -eq 'Codex' -and -not $SkipCompatibilityLink) {
     $agentsSkills = Join-Path $userProfile '.agents\skills'
     New-Item -ItemType Directory -Force -Path $agentsSkills | Out-Null
     $compatibility = Join-Path $agentsSkills 'lark-test-ledger'
@@ -34,6 +41,7 @@ if ($IdentityEnv) {
 
 [pscustomobject]@{
     installed = $true
+    client = $Client
     skill = $target
     compatibility_link = $compatibility
     identity_configured = [bool]$IdentityEnv
