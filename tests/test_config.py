@@ -24,7 +24,7 @@ class ConfigTests(unittest.TestCase):
 
     def test_settings_accept_external_state_and_defaults_simple_table(self):
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             env = root / "ledger.env"
             env.write_text(
                 "\n".join(
@@ -52,7 +52,7 @@ class ConfigTests(unittest.TestCase):
 
     def test_settings_allow_create_before_base_url_exists(self):
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             env = root / "ledger.env"
             env.write_text(
                 "\n".join(
@@ -72,7 +72,7 @@ class ConfigTests(unittest.TestCase):
 
     def test_project_env_can_reuse_shared_identity_without_copying_secrets(self):
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             shared = root / "shared.env"
             shared.write_text(
                 "\n".join(
@@ -111,7 +111,7 @@ class ConfigTests(unittest.TestCase):
 
     def test_batch_size_cannot_exceed_lark_limit(self):
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             env = root / "ledger.env"
             env.write_text(
                 "\n".join(
@@ -132,7 +132,7 @@ class ConfigTests(unittest.TestCase):
 
     def test_rejects_unedited_windows_user_path_placeholder(self):
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             env = root / "ledger.env"
             env.write_text(
                 "\n".join(
